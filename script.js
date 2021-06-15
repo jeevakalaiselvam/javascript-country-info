@@ -14,7 +14,7 @@ const renderCountry = function (data, className = "") {
         <h4 class="country__region">${data.region}</h4>
         <p class="country__row"><span>👫</span>${(
             +data.population / 1000000
-        ).toFixed(1)} people</p>
+        ).toFixed(1)} million people</p>
         <p class="country__row"><span>🗣️</span>${data.languages[0].name}</p>
         <p class="country__row"><span>💰</span>${data.currencies[0].name}</p>
       </div>
@@ -26,12 +26,22 @@ const renderCountry = function (data, className = "") {
 
 const getCountryData = (country) => {
     fetch(`https://restcountries.eu/rest/v2/name/${country}`)
-        .then((response) => {
-            return response.json();
+        .then((countryResponse) => {
+            return countryResponse.json();
         })
-        .then((data) => {
-            renderCountry(data[0]);
+        .then((countryData) => {
+            renderCountry(countryData[0]);
+            const neighbour = countryData[0].borders[0];
+            if (!neighbour) return;
+            return fetch(`https://restcountries.eu/rest/v2/alpha/${neighbour}`);
+        })
+        .then((neighbourResponse) => {
+            return neighbourResponse.json();
+        })
+        .then((neighbourData) => {
+            renderCountry(neighbourData, "neighbour");
         });
 };
 
-getCountryData("usa");
+//Get the details of USA
+getCountryData("ukraine");
