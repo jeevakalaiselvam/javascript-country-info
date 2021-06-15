@@ -43,5 +43,5 @@ const getCountryData = (country) => {
         });
 };
 
-//Get the details of USA
+//Get the details of a country
 getCountryData("ukraine");
